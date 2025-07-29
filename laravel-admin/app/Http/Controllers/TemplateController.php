@@ -40,6 +40,23 @@ class TemplateController extends Controller
     {
 
         // テンプレート作成処理
+        //バリデーション作成
+        $request->validate([
+            'tmpcode' => 'required|string|max:50',
+            'tmpname' => 'required|string|max:100',
+            'tmphtml' => 'required|string',
+            'cssId'  => 'nullable|integer|exists:csses,cssId',
+            'jsId'  => 'nullable|integer|exists:javascripts,jsId',
+        ]);
+
+        DB::table('templates')->insert([
+            'tmpcode' => $request->tmpcode,
+            'tmpname' => $request->tmpname,
+            'tmphtml' => $request->tmphtml,
+            'cssId' => $request->cssId,
+            'jsId' => $request->jsId,
+        ]);
+
 
         return redirect()->route('templateList')->with('success', 'テンプレートを作成しました');
     }
