@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TemplateController extends Controller
 {
-    //テンプレ一覧の作成を表示
+    // テンプレ一覧の作成を表示
     public function index()
     {
         $templates = DB::table('templates')
@@ -30,7 +30,7 @@ class TemplateController extends Controller
         return view('templateList', compact('templates'));
     }
 
-    //テンプレ新規作成画面、css,jsから選べるようにする
+    // テンプレ新規作成画面、css,jsから選べるようにする
     public function create()
     {
         $csses = DB::table('csses')->get();
@@ -42,7 +42,6 @@ class TemplateController extends Controller
     {
 
         // テンプレート作成処理
-        //バリデーション作成
         $vali = $request->validate([
             'tmpcode' => 'required|string|max:50|unique:templates,tmpcode',
             'tmpname' => 'required|string|max:100',
@@ -51,26 +50,12 @@ class TemplateController extends Controller
             'jsId'  => 'nullable|integer|exists:javascripts,jsId',
         ]);
 
-        //バリデーションしていない3つをバリデーションしたものと合体する
         $result = array_merge($vali, [
             'userId' => Auth::id(),
             'tmpcreatedatetime' => now(),
             'tmpupdatedatetime' => now(),
         ]);
         DB::table('templates')->insert($result);
-
-
-        /*DB::table('templates')->insert([
-            'tmpcode' => $request->input('tmpcode'),
-            'tmpname' => $request->input('tmpname'),
-            'tmphtml' => $request->input('tmphtml'),
-            'cssId' => $request->input('cssId'),
-            'jsId' => $request->input('jsId'),
-            'userId' => Auth::id(),
-            'tmpcreatedatetime' => now(),
-            'tmpupdatedatetime' => now(),
-        ]);*/
-
 
         return redirect()->route('templateList')->with('success', 'テンプレートを作成しました');
     }
@@ -111,7 +96,7 @@ class TemplateController extends Controller
     public function update(Request $request, $id)
     {
         // テンプレート更新処理
-
+        //バリデーション
 
         return redirect()->route('templateList')->with('success', 'テンプレートを更新しました');
     }
