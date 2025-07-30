@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class TemplateController extends Controller
 {
-    // テンプレ一覧の作成を表示
     public function index()
     {
         $templates = DB::table('templates')
@@ -30,7 +29,6 @@ class TemplateController extends Controller
         return view('templateList', compact('templates'));
     }
 
-    // テンプレ新規作成画面、css,jsから選べるようにする
     public function create()
     {
         $csses = DB::table('csses')->get();
