@@ -94,7 +94,6 @@ class TemplateController extends Controller
     public function update(Request $request, $id)
     {
         // テンプレート更新処理
-        //バリデーション
 
         return redirect()->route('templateList')->with('success', 'テンプレートを更新しました');
     }
