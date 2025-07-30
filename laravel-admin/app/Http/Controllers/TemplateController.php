@@ -94,6 +94,17 @@ class TemplateController extends Controller
     public function update(Request $request, $id)
     {
         // テンプレート更新処理
+        $vali = $request->validate([
+            'tmpcode' => 'required|string|max:50|unique:templates,tmpcode,' . $id . ',tmpId',
+            'tmpname' => 'required|string|max:100',
+            'tmphtml' => 'required|string',
+            'cssId'  => 'nullable|integer|exists:csses,cssId',
+            'jsId'  => 'nullable|integer|exists:javascripts,jsId',
+        ]);
+        $result = array_merge($vali, [
+            'tmpupdatedatetime' => now(),
+        ]);
+        DB::table('templates')->where('tmpID',$id)->update($result);
 
         return redirect()->route('templateList')->with('success', 'テンプレートを更新しました');
     }
