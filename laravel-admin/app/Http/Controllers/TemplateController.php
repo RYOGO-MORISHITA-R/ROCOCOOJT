@@ -108,7 +108,7 @@ class TemplateController extends Controller
         $result = array_merge($validated, [
             'tmpupdatedatetime' => now(),
         ]);
-        DB::table('templates')->where('tmpID',$id)->update($result);
+        DB::table('templates')->where('tmpId',$id)->update($result);
 
         return redirect()->route('templateList')->with('success', 'テンプレートを更新しました');
     }
