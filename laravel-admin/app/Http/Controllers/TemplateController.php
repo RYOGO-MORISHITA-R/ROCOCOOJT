@@ -93,15 +93,19 @@ class TemplateController extends Controller
 
     public function update(Request $request, $id)
     {
+        $exist = DB::table('templates')->where('tmpId',$id)->exists();
+        if (!$exist) {
+            abort(404);
+        }
         // テンプレート更新処理
-        $vali = $request->validate([
+        $validated = $request->validate([
             'tmpcode' => 'required|string|max:50|unique:templates,tmpcode,' . $id . ',tmpId',
             'tmpname' => 'required|string|max:100',
             'tmphtml' => 'required|string',
             'cssId'  => 'nullable|integer|exists:csses,cssId',
             'jsId'  => 'nullable|integer|exists:javascripts,jsId',
         ]);
-        $result = array_merge($vali, [
+        $result = array_merge($validated, [
             'tmpupdatedatetime' => now(),
         ]);
         DB::table('templates')->where('tmpID',$id)->update($result);
