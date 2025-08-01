@@ -51,6 +51,7 @@
         <div class="buttoncenter">
             <a href="{{ route('templateEdit', ['id' => $template->tmpId]) }}" class="button-touroku" style="color:#FFF">編集</a>
             <a href="{{ route('templateList') }}" class="button-touroku" style="color:#FFF">一覧へ戻る</a>
+            <a href="{{ route('templateDestroy',['id' => $template->tmpId]) }}" class="button-touroku" style="color:#FFF">削除</a>
         </div>
     </div>
 </div>

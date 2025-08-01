@@ -95,10 +95,9 @@ class TemplateController extends Controller
 
     public function update(Request $request, $id)
     {
-        $exist = DB::table('templates')->where('tmpId',$id)->exists();
+        $exist = DB::table('templates')->where('tmpId',$id)->first();
         if (!$exist) {
             abort(Response::HTTP_NOT_FOUND);
-
         }
         // テンプレート更新処理
         $validated = $request->validate([
@@ -113,9 +112,20 @@ class TemplateController extends Controller
         ]);
         DB::table('templates')->where('tmpId',$id)->update($result);
 
-        return redirect()->route('templateList')->with('success', 'テンプレートを更新しました');
+        return redirect()->route('templateList')->with('success', 'テンプレートを更新しました。ID:' . $exist->tmpId );
     }
 
+    // テンプレート削除処理
+    public function destroy($id)
+    {
+        $del = DB::table('templates')->where('tmpId', $id)->first();
+        if (!$del) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        DB::table('templates')->where('tmpId', $id)->delete();
+
+        return redirect()->route('templateList')->with('success', 'テンプレートを削除しました。ID:' .  $del->tmpId);
+    }
 
 }
 

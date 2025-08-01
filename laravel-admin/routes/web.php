@@ -25,13 +25,14 @@ Route::middleware(['auth'])->group(function () {
     // ホーム画面
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    // テンプレート一覧・詳細・登録・編集
+    // テンプレート一覧・詳細・登録・編集・削除
     Route::get('/templateList', [TemplateController::class, 'index'])->name('templateList');
     Route::get('/template/create', [TemplateController::class, 'create'])->name('templateCreate');
     Route::post('/template/store', [TemplateController::class, 'store'])->name('templateStore');
     Route::get('/template/{id}', [TemplateController::class, 'show'])->name('templateShow');
     Route::get('/template/{id}/edit', [TemplateController::class, 'edit'])->name('templateEdit');
     Route::put('/template/{id}', [TemplateController::class, 'update'])->name('templateUpdate');
+    Route::get('/template/del/{id}', [TemplateController::class, 'destroy'])->name('templateDestroy');
 
     // CSS管理
     Route::get('/cssList', [CssController::class, 'index'])->name('cssList');
