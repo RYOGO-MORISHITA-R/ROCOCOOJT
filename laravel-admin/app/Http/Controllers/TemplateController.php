@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class TemplateController extends Controller
 {
@@ -95,7 +97,8 @@ class TemplateController extends Controller
     {
         $exist = DB::table('templates')->where('tmpId',$id)->exists();
         if (!$exist) {
-            abort(404);
+            abort(Response::HTTP_NOT_FOUND);
+
         }
         // テンプレート更新処理
         $validated = $request->validate([
