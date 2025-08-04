@@ -95,8 +95,8 @@ class TemplateController extends Controller
 
     public function update(Request $request, $id)
     {
-        $exist = DB::table('templates')->where('tmpId',$id)->exists();
-        if (!$exist) {
+        $exist = DB::table('templates')->where('tmpId',$id);
+        if (!($exist->exists())) {
             abort(Response::HTTP_NOT_FOUND);
 
         }
@@ -108,10 +108,10 @@ class TemplateController extends Controller
             'cssId'  => 'nullable|integer|exists:csses,cssId',
             'jsId'  => 'nullable|integer|exists:javascripts,jsId',
         ]);
-        $result = array_merge($validated, [
-            'tmpupdatedatetime' => now(),
-        ]);
-        DB::table('templates')->where('tmpId',$id)->update($result);
+
+        $validated['tmpupdatedatetime'] = now();
+
+        $exist->update($validated);
 
         return redirect()->route('templateList')->with('success', 'テンプレートを更新しました');
     }
