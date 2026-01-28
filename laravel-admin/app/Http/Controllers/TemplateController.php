@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class TemplateController extends Controller
 {
@@ -40,6 +42,20 @@ class TemplateController extends Controller
     {
 
         // テンプレート作成処理
+        $vali = $request->validate([
+            'tmpcode' => 'required|string|max:50|unique:templates,tmpcode',
+            'tmpname' => 'required|string|max:100',
+            'tmphtml' => 'required|string',
+            'cssId'  => 'nullable|integer|exists:csses,cssId',
+            'jsId'  => 'nullable|integer|exists:javascripts,jsId',
+        ]);
+
+        $result = array_merge($vali, [
+            'userId' => Auth::id(),
+            'tmpcreatedatetime' => now(),
+            'tmpupdatedatetime' => now(),
+        ]);
+        DB::table('templates')->insert($result);
 
         return redirect()->route('templateList')->with('success', 'テンプレートを作成しました');
     }
@@ -79,11 +95,37 @@ class TemplateController extends Controller
 
     public function update(Request $request, $id)
     {
+        $exist = DB::table('templates')->where('tmpId',$id)->first();
+        if (!$exist) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
         // テンプレート更新処理
+        $validated = $request->validate([
+            'tmpcode' => 'required|string|max:50|unique:templates,tmpcode,' . $id . ',tmpId',
+            'tmpname' => 'required|string|max:100',
+            'tmphtml' => 'required|string',
+            'cssId'  => 'nullable|integer|exists:csses,cssId',
+            'jsId'  => 'nullable|integer|exists:javascripts,jsId',
+        ]);
+        $result = array_merge($validated, [
+            'tmpupdatedatetime' => now(),
+        ]);
+        DB::table('templates')->where('tmpId',$id)->update($result);
 
-        return redirect()->route('templateList')->with('success', 'テンプレートを更新しました');
+        return redirect()->route('templateList')->with('success', 'テンプレートを更新しました。ID:' . $exist->tmpId );
     }
 
+    // テンプレート削除処理
+    public function destroy($id)
+    {
+        $del = DB::table('templates')->where('tmpId', $id)->first();
+        if (!$del) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        DB::table('templates')->where('tmpId', $id)->delete();
+
+        return redirect()->route('templateList')->with('success', 'テンプレートを削除しました。ID:' .  $del->tmpId);
+    }
 
 }
 
